@@ -6,13 +6,13 @@
         <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-capable" content="yes">
-        <link rel="stylesheet" href="css/leaflet.css">
+        <link rel="stylesheet" href="css/leaflet.css"><link rel="stylesheet" href="css/L.Control.Locate.min.css">
         <link rel="stylesheet" href="css/qgis2web.css"><link rel="stylesheet" href="css/fontawesome-all.min.css">
         <link rel="stylesheet" href="css/leaflet-control-geocoder.Geocoder.css">
         <link rel="stylesheet" href="css/leaflet-measure.css">
         <style>
         #map {
-            width: 1245px;
+            width: 1175px;
             height: 768px;
         }
         </style>
@@ -22,8 +22,7 @@
         <div id="map">
         </div>
         <script src="js/qgis2web_expressions.js"></script>
-        <script src="js/leaflet.js"></script>
-        <script src="js/multi-style-layer.js"></script>
+        <script src="js/leaflet.js"></script><script src="js/L.Control.Locate.min.js"></script>
         <script src="js/leaflet.rotatedMarker.js"></script>
         <script src="js/leaflet.pattern.js"></script>
         <script src="js/leaflet-hash.js"></script>
@@ -34,15 +33,30 @@
         <script src="js/leaflet-control-geocoder.Geocoder.js"></script>
         <script src="js/leaflet-measure.js"></script>
         <script src="data/FishBreedingArea_1.js"></script>
-        <script src="data/LacustrineProtectiveArea_2.js"></script>
-        <script src="data/Cageestablishment_3.js"></script>
+        <script src="data/Cageestablishment_2.js"></script>
         <script>
+        var highlightLayer;
+        function highlightFeature(e) {
+            highlightLayer = e.target;
+
+            if (e.target.feature.geometry.type === 'LineString') {
+              highlightLayer.setStyle({
+                color: '#ffff00',
+              });
+            } else {
+              highlightLayer.setStyle({
+                fillColor: '#ffff00',
+                fillOpacity: 1
+              });
+            }
+        }
         var map = L.map('map', {
             zoomControl:true, maxZoom:28, minZoom:1
-        }).fitBounds([[0.3546593777758056,33.14019599409486],[0.4390490986024358,33.27713649407854]]);
+        }).fitBounds([[-3.142008968178823,22.739933943456343],[7.33514303182111,38.78392780246407]]);
         var hash = new L.Hash(map);
         map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
         var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+        L.control.locate({locateOptions: {maxZoom: 19}}).addTo(map);
         var measureControl = new L.Control.Measure({
             position: 'topleft',
             primaryLengthUnit: 'meters',
@@ -72,6 +86,14 @@
         layer_OSMStandard_0;
         map.addLayer(layer_OSMStandard_0);
         function pop_FishBreedingArea_1(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
             var popupContent = '<table>\
                     <tr>\
                         <td colspan="2">' + (feature.properties['id'] !== null ? autolinker.link(feature.properties['id'].toLocaleString()) : '') + '</td>\
@@ -107,99 +129,40 @@
             return {
                 pane: 'pane_FishBreedingArea_1',
                 opacity: 1,
-                color: 'rgba(82,82,82,1.0)',
+                color: 'rgba(9,71,137,1.0)',
                 dashArray: '',
-                lineCap: 'square',
-                lineJoin: 'bevel',
-                weight: 1.0,
-                fillOpacity: 0,
-                interactive: true,
-            }
-        }
-        function style_FishBreedingArea_1_1() {
-            return {
-                pane: 'pane_FishBreedingArea_1',
-                interactive: true,
-            }
-        }
-        function style_FishBreedingArea_1_2() {
-            return {
-                pane: 'pane_FishBreedingArea_1',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(99,170,251,1.0)',
                 interactive: true,
             }
         }
         map.createPane('pane_FishBreedingArea_1');
         map.getPane('pane_FishBreedingArea_1').style.zIndex = 401;
         map.getPane('pane_FishBreedingArea_1').style['mix-blend-mode'] = 'normal';
-        var layer_FishBreedingArea_1 = new L.geoJson.multiStyle(json_FishBreedingArea_1, {
+        var layer_FishBreedingArea_1 = new L.geoJson(json_FishBreedingArea_1, {
             attribution: '',
             interactive: true,
             dataVar: 'json_FishBreedingArea_1',
             layerName: 'layer_FishBreedingArea_1',
             pane: 'pane_FishBreedingArea_1',
             onEachFeature: pop_FishBreedingArea_1,
-            styles: [style_FishBreedingArea_1_0,style_FishBreedingArea_1_1,style_FishBreedingArea_1_2,]
+            style: style_FishBreedingArea_1_0,
         });
         bounds_group.addLayer(layer_FishBreedingArea_1);
         map.addLayer(layer_FishBreedingArea_1);
-        function pop_LacustrineProtectiveArea_2(feature, layer) {
-            var popupContent = '<table>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['id'] !== null ? autolinker.link(feature.properties['id'].toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['Name'] !== null ? autolinker.link(feature.properties['Name'].toLocaleString()) : '') + '</td>\
-                    </tr>\
-                </table>';
-            layer.bindPopup(popupContent, {maxHeight: 400});
-        }
-
-        var pattern_LacustrineProtectiveArea_2_0 = new L.StripePattern({
-            weight: 0.3,
-            spaceWeight: 2.0,
-            color: '#e41a1c',
-            opacity: 1.0,
-            spaceOpacity: 0,
-            angle: 225
-        });
-        pattern_LacustrineProtectiveArea_2_0.addTo(map);
-        function style_LacustrineProtectiveArea_2_0() {
-            return {
-                pane: 'pane_LacustrineProtectiveArea_2',
-                stroke: false,
-                fillOpacity: 1,
-                fillPattern: pattern_LacustrineProtectiveArea_2_0,
-                interactive: true,
-            }
-        }
-        function style_LacustrineProtectiveArea_2_1() {
-            return {
-                pane: 'pane_LacustrineProtectiveArea_2',
-                opacity: 1,
-                color: 'rgba(228,26,28,1.0)',
-                dashArray: '',
-                lineCap: 'square',
-                lineJoin: 'bevel',
-                weight: 2.0,
-                fillOpacity: 0,
-                interactive: true,
-            }
-        }
-        map.createPane('pane_LacustrineProtectiveArea_2');
-        map.getPane('pane_LacustrineProtectiveArea_2').style.zIndex = 402;
-        map.getPane('pane_LacustrineProtectiveArea_2').style['mix-blend-mode'] = 'normal';
-        var layer_LacustrineProtectiveArea_2 = new L.geoJson.multiStyle(json_LacustrineProtectiveArea_2, {
-            attribution: '',
-            interactive: true,
-            dataVar: 'json_LacustrineProtectiveArea_2',
-            layerName: 'layer_LacustrineProtectiveArea_2',
-            pane: 'pane_LacustrineProtectiveArea_2',
-            onEachFeature: pop_LacustrineProtectiveArea_2,
-            styles: [style_LacustrineProtectiveArea_2_0,style_LacustrineProtectiveArea_2_1,]
-        });
-        bounds_group.addLayer(layer_LacustrineProtectiveArea_2);
-        map.addLayer(layer_LacustrineProtectiveArea_2);
-        function pop_Cageestablishment_3(feature, layer) {
+        function pop_Cageestablishment_2(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
             var popupContent = '<table>\
                     <tr>\
                         <th scope="row">Name</th>\
@@ -251,9 +214,9 @@
             layer.bindPopup(popupContent, {maxHeight: 400});
         }
 
-        function style_Cageestablishment_3_0() {
+        function style_Cageestablishment_2_0() {
             return {
-                pane: 'pane_Cageestablishment_3',
+                pane: 'pane_Cageestablishment_2',
                 radius: 3.0,
                 opacity: 1,
                 color: 'rgba(35,35,35,1.0)',
@@ -267,26 +230,26 @@
                 interactive: true,
             }
         }
-        map.createPane('pane_Cageestablishment_3');
-        map.getPane('pane_Cageestablishment_3').style.zIndex = 403;
-        map.getPane('pane_Cageestablishment_3').style['mix-blend-mode'] = 'normal';
-        var layer_Cageestablishment_3 = new L.geoJson(json_Cageestablishment_3, {
+        map.createPane('pane_Cageestablishment_2');
+        map.getPane('pane_Cageestablishment_2').style.zIndex = 402;
+        map.getPane('pane_Cageestablishment_2').style['mix-blend-mode'] = 'normal';
+        var layer_Cageestablishment_2 = new L.geoJson(json_Cageestablishment_2, {
             attribution: '',
             interactive: true,
-            dataVar: 'json_Cageestablishment_3',
-            layerName: 'layer_Cageestablishment_3',
-            pane: 'pane_Cageestablishment_3',
-            onEachFeature: pop_Cageestablishment_3,
+            dataVar: 'json_Cageestablishment_2',
+            layerName: 'layer_Cageestablishment_2',
+            pane: 'pane_Cageestablishment_2',
+            onEachFeature: pop_Cageestablishment_2,
             pointToLayer: function (feature, latlng) {
                 var context = {
                     feature: feature,
                     variables: {}
                 };
-                return L.circleMarker(latlng, style_Cageestablishment_3_0(feature));
+                return L.circleMarker(latlng, style_Cageestablishment_2_0(feature));
             },
         });
-        bounds_group.addLayer(layer_Cageestablishment_3);
-        map.addLayer(layer_Cageestablishment_3);
+        bounds_group.addLayer(layer_Cageestablishment_2);
+        map.addLayer(layer_Cageestablishment_2);
         var osmGeocoder = new L.Control.Geocoder({
             collapsed: true,
             position: 'topleft',
@@ -298,27 +261,16 @@
         document.getElementsByClassName('leaflet-control-geocoder-icon')[0]
         .title += 'Search for a place';
         var baseMaps = {};
-        L.control.layers(baseMaps,{'<img src="legend/Cageestablishment_3.png" /> Cage establishment': layer_Cageestablishment_3,'<img src="legend/LacustrineProtectiveArea_2.png" /> Lacustrine Protective Area': layer_LacustrineProtectiveArea_2,'<img src="legend/FishBreedingArea_1.png" /> Fish Breeding Area': layer_FishBreedingArea_1,"OSM Standard": layer_OSMStandard_0,},{collapsed:false}).addTo(map);
+        L.control.layers(baseMaps,{'<img src="legend/Cageestablishment_2.png" /> Cage establishment': layer_Cageestablishment_2,'<img src="legend/FishBreedingArea_1.png" /> Fish Breeding Area': layer_FishBreedingArea_1,"OSM Standard": layer_OSMStandard_0,},{collapsed:false}).addTo(map);
         map.on("zoomend", function(){
 
                 if (map.hasLayer(layer_FishBreedingArea_1)) {
-                    if (map.getZoom() <= 12 && map.getZoom() >= 18) {
+                    if (map.getZoom() <= 8 && map.getZoom() >= 18) {
                         layer_FishBreedingArea_1.eachLayer(function (layer) {
                             layer.openTooltip();
                         });
                     } else {
                         layer_FishBreedingArea_1.eachLayer(function (layer) {
-                            layer.closeTooltip();
-                        });
-                    }
-                }
-                if (map.hasLayer(layer_Cageestablishment_3)) {
-                    if (map.getZoom() <= 12 && map.getZoom() >= 18) {
-                        layer_Cageestablishment_3.eachLayer(function (layer) {
-                            layer.openTooltip();
-                        });
-                    } else {
-                        layer_Cageestablishment_3.eachLayer(function (layer) {
                             layer.closeTooltip();
                         });
                     }
@@ -339,12 +291,12 @@
               i++;
         });
         var i = 0;
-        layer_Cageestablishment_3.eachLayer(function(layer) {
+        layer_Cageestablishment_2.eachLayer(function(layer) {
             var context = {
                 feature: layer.feature,
                 variables: {}
             };
-            layer.bindTooltip((layer.feature.properties['Name'] !== null?String('<div style="color: #000000; font-size: 10pt; font-weight: bold; font-style: italic; font-family: \'Book Antiqua\', sans-serif;">' + layer.feature.properties['Name']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_Cageestablishment_3'});
+            layer.bindTooltip((layer.feature.properties['Name'] !== null?String('<div style="color: #000000; font-size: 10pt; font-weight: bold; font-style: italic; font-family: \'Book Antiqua\', sans-serif;">' + layer.feature.properties['Name']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_Cageestablishment_2'});
             labels.push(layer);
             totalMarkers += 1;
               layer.added = true;
@@ -352,7 +304,7 @@
               i++;
         });
                 if (map.hasLayer(layer_FishBreedingArea_1)) {
-                    if (map.getZoom() <= 12 && map.getZoom() >= 18) {
+                    if (map.getZoom() <= 8 && map.getZoom() >= 18) {
                         layer_FishBreedingArea_1.eachLayer(function (layer) {
                             layer.openTooltip();
                         });
@@ -362,26 +314,15 @@
                         });
                     }
                 }
-                if (map.hasLayer(layer_Cageestablishment_3)) {
-                    if (map.getZoom() <= 12 && map.getZoom() >= 18) {
-                        layer_Cageestablishment_3.eachLayer(function (layer) {
-                            layer.openTooltip();
-                        });
-                    } else {
-                        layer_Cageestablishment_3.eachLayer(function (layer) {
-                            layer.closeTooltip();
-                        });
-                    }
-                }
-        resetLabels([layer_FishBreedingArea_1,layer_Cageestablishment_3]);
+        resetLabels([layer_FishBreedingArea_1,layer_Cageestablishment_2]);
         map.on("zoomend", function(){
-            resetLabels([layer_FishBreedingArea_1,layer_Cageestablishment_3]);
+            resetLabels([layer_FishBreedingArea_1,layer_Cageestablishment_2]);
         });
         map.on("layeradd", function(){
-            resetLabels([layer_FishBreedingArea_1,layer_Cageestablishment_3]);
+            resetLabels([layer_FishBreedingArea_1,layer_Cageestablishment_2]);
         });
         map.on("layerremove", function(){
-            resetLabels([layer_FishBreedingArea_1,layer_Cageestablishment_3]);
+            resetLabels([layer_FishBreedingArea_1,layer_Cageestablishment_2]);
         });
         </script>
     </body>
