@@ -282,17 +282,6 @@
                         });
                     }
                 }
-                if (map.hasLayer(layer_Cageestablishment_2)) {
-                    if (map.getZoom() <= 12 && map.getZoom() >= 18) {
-                        layer_Cageestablishment_2.eachLayer(function (layer) {
-                            layer.openTooltip();
-                        });
-                    } else {
-                        layer_Cageestablishment_2.eachLayer(function (layer) {
-                            layer.closeTooltip();
-                        });
-                    }
-                }
         });
         setBounds();
         var i = 0;
@@ -328,17 +317,6 @@
                         });
                     } else {
                         layer_FishBreedingArea_1.eachLayer(function (layer) {
-                            layer.closeTooltip();
-                        });
-                    }
-                }
-                if (map.hasLayer(layer_Cageestablishment_2)) {
-                    if (map.getZoom() <= 12 && map.getZoom() >= 18) {
-                        layer_Cageestablishment_2.eachLayer(function (layer) {
-                            layer.openTooltip();
-                        });
-                    } else {
-                        layer_Cageestablishment_2.eachLayer(function (layer) {
                             layer.closeTooltip();
                         });
                     }
